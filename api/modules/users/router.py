@@ -64,11 +64,11 @@ async def register_user(
 
     # Создание профиля
     new_user = models.User(
-        first_name=request.profile.first_name,
-        last_name=request.profile.last_name,
-        license_number=request.profile.license_number,
-        phone_number=request.profile.phone_number,
-        role=request.profile.role
+        first_name=request.user.first_name,
+        last_name=request.user.last_name,
+        license_number=request.user.license_number,
+        phone_number=request.user.phone_number,
+        role=request.user.role
     )
     db.add(new_user)
     await db.flush()  # Получаем id
@@ -81,7 +81,7 @@ async def register_user(
     await db.refresh(telegram_acc)
 
     return schemas.FullUserResponse(
-        profile=schemas.UserResponse.model_validate(new_user),
+        user=schemas.UserResponse.model_validate(new_user),
         telegram_account=(
             schemas.TelegramAccountResponse.model_validate(telegram_acc)
         )
