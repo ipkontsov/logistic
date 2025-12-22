@@ -3,6 +3,13 @@ from pathlib import Path
 from decouple import config as decouple_config
 
 
+
+class UserData:
+    MAX_LENGHT_TELEGRAM_ID = 4
+    MIN_LENGHT_TELEGRAM_ID = 20
+    MIN_LENGHT_NAME = 2
+
+
 class DataBase:
     PROD = decouple_config('PROD', default=False, cast=bool)
 

@@ -1,7 +1,12 @@
-# api/modules/user/schemas.py
+import re
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+
+from config import UserData as UD
+from api.modules.users.validators import (
+    TelegramId, CyrillicName, RussianPhoneNumber)
+
 
 
 class UserRole(str, Enum):
@@ -15,12 +20,11 @@ class UserRole(str, Enum):
 # Базовые схемы
 # -------------------
 class UserBase(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: CyrillicName
+    last_name: CyrillicName
     license_number: str
-    phone_number: str
-    role: UserRole
-    telegram_id: str
+    phone_number: RussianPhoneNumber
+    telegram_id: TelegramId
     telegram_name: str
 
     class Config:
@@ -41,7 +45,7 @@ class Token(BaseModel):
 # Запросы
 # -------------------
 class TelegramAuthRequest(BaseModel):
-    telegram_id: str
+    telegram_id: TelegramId
 
 class UserRegisterRequest(UserBase):
     pass

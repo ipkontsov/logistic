@@ -16,25 +16,21 @@ router = APIRouter(prefix='/user', tags=['User'])
     status_code=201
 )
 async def reserve_telegram_account(
-    account: schemas.TelegramAccountReserve,
+    account: schemas.WhiteListAdd,
     db: AsyncSession = Depends(get_db)
 ):
     """Резервация telegram_id и разрешение на регистрацию.
     Заполняется admin или grand_driver."""
     result = await db.execute(
-        select(models.TelegramAccount).where(
-            models.TelegramAccount.telegram_id == account.telegram_id
+        select(models.WhiteList).where(
+            models.WhiteList.telegram_id == account.telegram_id
         )
     )
     existing = result.scalar_one_or_none()
     if existing:
         raise HTTPException(400, 'Telegram ID уже зарезервирован')
 
-    new_account = models.TelegramAccount(
-        telegram_id=account.telegram_id,
-        telegram_name=account.telegram_name,
-        user_id=None
-    )
+    new_account = models.WhiteList(telegram_id=account.telegram_id)
     db.add(new_account)
     await db.commit()
     await db.refresh(new_account)
