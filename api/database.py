@@ -1,19 +1,19 @@
 # api/database.py
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.pool import AsyncAdaptedQueuePool
 
-from config import DataBase
+from config import settings
 
 engine = create_async_engine(
-    DataBase.DATABASE_URL,
+    settings.DATABASE_URL,
     echo=False,
     poolclass=AsyncAdaptedQueuePool,
     pool_size=20,
     max_overflow=30
 )
 
-AsyncSessionLocal = AsyncSession(
+AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     expire_on_commit=False,
     autoflush=False
